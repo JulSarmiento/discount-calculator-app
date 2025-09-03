@@ -1,11 +1,13 @@
 package com.julhdev.discountcalculator.views
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
@@ -57,56 +59,74 @@ fun HomeView() {
   ) {
     ContentHomeView(it)
   }
-
 }
 
 @Composable
 fun ContentHomeView(paddingValues: PaddingValues ) {
-  Column(
-    modifier = Modifier
-      .fillMaxSize()
-      .padding(paddingValues)
-      .padding(vertical = 10.dp)
-      .padding(horizontal = 20.dp),
-  ) {
-    val price by remember { mutableStateOf("") }
-    val discount by remember { mutableStateOf("") }
+   Column(
+     modifier = Modifier
+        .fillMaxSize()
+        .background(MaterialTheme.colorScheme.background),
+      verticalArrangement = Arrangement.Top,
+      horizontalAlignment = Alignment.CenterHorizontally
+   ) {
+     Column(
+       modifier = Modifier
+         .fillMaxWidth()
+         .padding(paddingValues)
+         .padding(vertical = 10.dp)
+         .padding(horizontal = 20.dp),
 
-    SpaceHeight(20.dp)
-    Column {
-      TitleVew(
-        name = "Calculadora de Descuentos"
-      )
-      SpaceHeight(10.dp)
-      OutlineBtn(
-        text = "Limpiar",
-        onClick = { /* TODO */ }
-      )
-    }
-    SpaceHeight(25.dp)
-    Column {
-      SubTitle(
-        text = "Monto inicial"
-      )
-      MainTextField(
-        value = price,
-        onValueChange = { /* TODO */ },
-        label = "Precio"
-      )
-      SpaceHeight(10.dp)
-      SubTitle(
-        text = "Porcentaje de descuento"
-      )
-      MainTextField(
-        value = discount,
-        onValueChange = { /* TODO */ },
-        label = "Descuento (%)"
-      )
-      SpaceHeight(20.dp)
-      MainBtn(
-        text = "Calcular Descuento",
-        onClick = { /* TODO */ }
-      )
-    }
-  }
+       ) {
+       val price by remember { mutableStateOf("") }
+       val discount by remember { mutableStateOf("") }
+
+       SpaceHeight(20.dp)
+       Column {
+         TitleVew(
+           name = "Calculadora de Descuentos"
+         )
+         SpaceHeight(10.dp)
+         OutlineBtn(
+           text = "Limpiar",
+           onClick = { /* TODO */ }
+         )
+       }
+       SpaceHeight(25.dp)
+       Column {
+         SubTitle(
+           text = "Monto inicial"
+         )
+         MainTextField(
+           value = price,
+           onValueChange = { /* TODO */ },
+           label = "100"
+         )
+         SpaceHeight(10.dp)
+         SubTitle(
+           text = "Porcentaje de descuento"
+         )
+         MainTextField(
+           value = discount,
+           onValueChange = { /* TODO */ },
+           label = "10 %"
+         )
+         SpaceHeight(20.dp)
+         MainBtn(
+           text = "Calcular",
+           onClick = { /* TODO */ }
+         )
+       }
+     }
+     Column(
+       modifier = Modifier
+         .background(MaterialTheme.colorScheme.primary)
+         .fillMaxWidth()
+         .padding(paddingValues)
+         .padding(vertical = 10.dp)
+         .padding(horizontal = 20.dp),
+     ) {
+       Text("holis")
+     }
+   }
 }
