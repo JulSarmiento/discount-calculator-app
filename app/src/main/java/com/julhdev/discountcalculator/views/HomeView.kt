@@ -17,6 +17,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -42,17 +43,17 @@ import com.julhdev.discountcalculator.utils.*
 fun HomeView() {
   Scaffold(
     topBar = {
-      CenterAlignedTopAppBar(
-        title = { Text(text = "Discount Calculator", fontWeight = FontWeight.Bold) },
+      TopAppBar(
+        title = { Text(text = "Descuentos-chan", fontWeight = FontWeight.Bold) },
         colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
           containerColor = MaterialTheme.colorScheme.primary,
           titleContentColor = MaterialTheme.colorScheme.secondary
         ),
         navigationIcon = {
           Icon(
-            imageVector = Icons.Filled.AccountCircle,
+            imageVector = Icons.Filled.Percent,
             contentDescription = "User",
-            tint = MaterialTheme.colorScheme.primary,
+            tint = MaterialTheme.colorScheme.secondary,
           )
         }
       )
