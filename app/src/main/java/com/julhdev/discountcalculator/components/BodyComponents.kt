@@ -1,15 +1,20 @@
 package com.julhdev.discountcalculator.components
 
-import androidx.compose.foundation.border
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AttachMoney
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
@@ -18,6 +23,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.*
+
 
 @Composable
         /**
@@ -91,13 +97,33 @@ fun MainTextField(
 ) {
   OutlinedTextField(
     value= value,
+    leadingIcon = {
+     Box(
+       modifier = Modifier
+         .size(50.dp)
+         .background(
+            color = MaterialTheme.colorScheme.tertiary.copy(alpha = 0.1f),
+            shape = RoundedCornerShape(4.dp)
+         ),
+         contentAlignment = Alignment.Center
+     ){
+       Icon(
+         imageVector = Icons.Default.AttachMoney,
+         contentDescription = "Money icon",
+         tint = MaterialTheme.colorScheme.tertiary                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              ,
+
+         )
+     }
+    },
     onValueChange = onValueChange,
     label = { Text(text = label) },
     keyboardOptions = KeyboardOptions(
       keyboardType = KeyboardType.Number
     ),
+
     modifier = Modifier
       .fillMaxWidth()
+      .padding(0.dp)
   )
 }
 
