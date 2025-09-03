@@ -23,7 +23,8 @@ import androidx.compose.ui.unit.sp
          * usage: MainCard(150.0)
          */
 fun MainCard(
-  number: Double,
+  discountedPrice: Double,
+  discountedAmmout: Double,
   modifier: Modifier = Modifier
 ){
   Card(
@@ -45,7 +46,7 @@ fun MainCard(
       )
       SpaceHeight(10.dp)
       Text(
-        text = "$ $number",
+        text = "$ $discountedPrice",
         style = MaterialTheme.typography.headlineMedium,
         color = MaterialTheme.colorScheme.secondary,
         fontSize = 35.sp,
@@ -61,7 +62,7 @@ fun MainCard(
       )
       SpaceHeight(10.dp)
       Text(
-        text = "$ $number",
+        text = "$ $discountedAmmout",
         style = MaterialTheme.typography.headlineMedium
       )
     }

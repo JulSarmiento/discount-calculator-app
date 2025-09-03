@@ -100,6 +100,9 @@ fun MainTextField(
 ) {
   OutlinedTextField(
     value= value,
+    textStyle = TextStyle(
+      color = MaterialTheme.colorScheme.primary
+    ),
     leadingIcon = {
      Box(
        modifier = Modifier

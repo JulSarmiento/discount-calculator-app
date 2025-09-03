@@ -1,13 +1,10 @@
 package com.julhdev.discountcalculator.views
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -16,7 +13,6 @@ import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Percent
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -24,18 +20,13 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.julhdev.discountcalculator.R
 import com.julhdev.discountcalculator.components.MainBtn
 import com.julhdev.discountcalculator.components.MainCard
 import com.julhdev.discountcalculator.components.MainTextField
@@ -43,6 +34,8 @@ import com.julhdev.discountcalculator.components.OutlineBtn
 import com.julhdev.discountcalculator.components.SpaceHeight
 import com.julhdev.discountcalculator.components.SubTitle
 import com.julhdev.discountcalculator.components.TitleVew
+import com.julhdev.discountcalculator.utils.*
+import kotlin.Double
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -71,6 +64,11 @@ fun HomeView() {
 
 @Composable
 fun ContentHomeView(paddingValues: PaddingValues ) {
+  var price by remember { mutableStateOf("") }
+  var discount by remember { mutableStateOf("") }
+  var discountedPrice by remember { mutableStateOf(0.0) }
+  var discountAmount by remember { mutableStateOf(0.0) }
+
    Column(
      modifier = Modifier
         .fillMaxSize()
@@ -86,9 +84,6 @@ fun ContentHomeView(paddingValues: PaddingValues ) {
          .padding(horizontal = 20.dp),
 
        ) {
-       val price by remember { mutableStateOf("") }
-       val discount by remember { mutableStateOf("") }
-
        SpaceHeight(20.dp)
        Column {
          TitleVew(
@@ -97,7 +92,12 @@ fun ContentHomeView(paddingValues: PaddingValues ) {
          SpaceHeight(10.dp)
          OutlineBtn(
            text = "Limpiar",
-           onClick = { /* TODO */ }
+           onClick = {
+              price = ""
+              discount = ""
+              discountedPrice = 0.0
+              discountAmount = 0.0
+           }
          )
        }
        SpaceHeight(25.dp)
@@ -107,7 +107,7 @@ fun ContentHomeView(paddingValues: PaddingValues ) {
          )
          MainTextField(
            value = price,
-           onValueChange = { /* TODO */ },
+           onValueChange = { price = it },
            label = "100"
          )
          SpaceHeight(10.dp)
@@ -116,14 +116,17 @@ fun ContentHomeView(paddingValues: PaddingValues ) {
          )
          MainTextField(
            value = discount,
-           onValueChange = { /* TODO */ },
-           label = "10 ",
+           onValueChange = { discount = it },
+           label = "Precio",
            icon = Icons.Default.Percent
          )
          SpaceHeight(20.dp)
          MainBtn(
-           text = "Calcular",
-           onClick = { /* TODO */ }
+           text = "Descuento",
+           onClick = {
+              discountAmount = calculateSave(price.toDouble(), discount.toDouble())
+              discountedPrice =calculateDiscount(price.toDouble(), discount.toDouble())
+           }
          )
        }
      }
@@ -143,10 +146,10 @@ fun ContentHomeView(paddingValues: PaddingValues ) {
        )
        SpaceHeight(10.dp)
        Box(
-
        ){
          MainCard(
-           number = 90.0,
+           discountedPrice = discountedPrice,
+           discountedAmmout = discountAmount,
            modifier = Modifier
              .fillMaxSize()
              .padding(5.dp)
