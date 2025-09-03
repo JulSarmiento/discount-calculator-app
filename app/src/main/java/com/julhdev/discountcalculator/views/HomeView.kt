@@ -2,7 +2,9 @@ package com.julhdev.discountcalculator.views
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -11,8 +13,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
+import androidx.compose.material.icons.filled.Percent
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -25,11 +29,15 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.julhdev.discountcalculator.R
 import com.julhdev.discountcalculator.components.MainBtn
+import com.julhdev.discountcalculator.components.MainCard
 import com.julhdev.discountcalculator.components.MainTextField
 import com.julhdev.discountcalculator.components.OutlineBtn
 import com.julhdev.discountcalculator.components.SpaceHeight
@@ -68,7 +76,7 @@ fun ContentHomeView(paddingValues: PaddingValues ) {
         .fillMaxSize()
         .background(MaterialTheme.colorScheme.background),
       verticalArrangement = Arrangement.Top,
-      horizontalAlignment = Alignment.CenterHorizontally
+      horizontalAlignment = Alignment.CenterHorizontally,
    ) {
      Column(
        modifier = Modifier
@@ -109,7 +117,8 @@ fun ContentHomeView(paddingValues: PaddingValues ) {
          MainTextField(
            value = discount,
            onValueChange = { /* TODO */ },
-           label = "10 %"
+           label = "10 ",
+           icon = Icons.Default.Percent
          )
          SpaceHeight(20.dp)
          MainBtn(
@@ -120,13 +129,29 @@ fun ContentHomeView(paddingValues: PaddingValues ) {
      }
      Column(
        modifier = Modifier
-         .background(MaterialTheme.colorScheme.primary)
+         .background(MaterialTheme.colorScheme.tertiary)
          .fillMaxWidth()
-         .padding(paddingValues)
-         .padding(vertical = 10.dp)
-         .padding(horizontal = 20.dp),
+         .padding( 15.dp),
      ) {
-       Text("holis")
+       TitleVew(
+          name = "Resultado",
+         color = MaterialTheme.colorScheme.background
+       )
+       SpaceHeight(5.dp)
+       Text(
+          text = "Tus resultados se muestran a continuación según la información que ingresaste."
+       )
+       SpaceHeight(10.dp)
+       Box(
+
+       ){
+         MainCard(
+           number = 90.0,
+           modifier = Modifier
+             .fillMaxSize()
+             .padding(5.dp)
+         )
+       }
      }
    }
 }

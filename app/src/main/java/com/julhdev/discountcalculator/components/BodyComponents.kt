@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -32,13 +33,13 @@ import androidx.compose.ui.unit.*
          * @param name El texto que se mostrará como título.
          * usage: TitleVew("Bienvenido")
          */
-fun TitleVew(name: String) {
+fun TitleVew(name: String, color: Color = MaterialTheme.colorScheme.primary) {
   Text(
     text = name,
     fontSize = 23.sp,
     fontWeight = FontWeight.Bold,
     textAlign = TextAlign.Start,
-    color = MaterialTheme.colorScheme.primary,
+    color = color,
   )
 }
 
@@ -95,6 +96,7 @@ fun MainTextField(
   value: String,
   onValueChange: (String) -> Unit,
   label: String,
+  icon: ImageVector = Icons.Default.AttachMoney,
 ) {
   OutlinedTextField(
     value= value,
@@ -109,7 +111,7 @@ fun MainTextField(
          contentAlignment = Alignment.Center
      ){
        Icon(
-         imageVector = Icons.Default.AttachMoney,
+         imageVector = icon,
          contentDescription = "Money icon",
          tint = MaterialTheme.colorScheme.tertiary                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              ,
 
