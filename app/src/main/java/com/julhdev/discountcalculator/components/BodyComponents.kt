@@ -8,7 +8,10 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AttachMoney
 import androidx.compose.material.icons.filled.Calculate
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
@@ -25,6 +28,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.*
+
 
 
 @Composable
@@ -181,5 +185,61 @@ fun OutlineBtn(
     ),
     color = MaterialTheme.colorScheme.tertiary,
     modifier = Modifier.clickable { onClick() }
+  )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+/**
+ * Componente de alerta personalizada.
+ * @param title El título de la alerta.
+ * @param message El mensaje de la alerta.
+ * @param confirmText El texto del botón de confirmación.
+ * @param onDismiss La acción a realizar cuando se cierre la alerta.
+ * @param onConfirm La acción a realizar cuando se confirme la alerta.
+ * usage: Alert("Título", "Mensaje", { /* Dismiss action */ }, { /* Confirm action */ })
+ */
+fun Alert(
+  title: String,
+  message: String,
+  confirmText: String,
+  onDismiss: () -> Unit,
+  onConfirm: () -> Unit,
+) {
+  AlertDialog(
+    onDismissRequest = onDismiss,
+    title = {
+      Text(
+        text = title,
+        fontSize = 20.sp,
+        fontWeight = FontWeight.Bold,
+        color = MaterialTheme.colorScheme.primary,
+      )
+    },
+    text = {
+      Text(
+        text = message,
+        fontSize = 16.sp,
+        color = MaterialTheme.colorScheme.primary,
+      )
+    },
+    confirmButton = {
+      OutlinedButton(
+        onClick = onConfirm,
+        colors = ButtonDefaults.outlinedButtonColors(
+          containerColor = MaterialTheme.colorScheme.secondary,
+        ),
+        border = null,
+      ) {
+        Text(
+          text = confirmText,
+          fontSize = 16.sp,
+          color = MaterialTheme.colorScheme.primary,
+        )
+      }
+    },
+    shape = RoundedCornerShape(16.dp),
+    containerColor = MaterialTheme.colorScheme.background,
+    tonalElevation = 8.dp,
   )
 }

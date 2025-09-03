@@ -27,6 +27,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.julhdev.discountcalculator.components.Alert
 import com.julhdev.discountcalculator.components.MainBtn
 import com.julhdev.discountcalculator.components.MainCard
 import com.julhdev.discountcalculator.components.MainTextField
@@ -35,7 +36,6 @@ import com.julhdev.discountcalculator.components.SpaceHeight
 import com.julhdev.discountcalculator.components.SubTitle
 import com.julhdev.discountcalculator.components.TitleVew
 import com.julhdev.discountcalculator.utils.*
-import kotlin.Double
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -68,6 +68,7 @@ fun ContentHomeView(paddingValues: PaddingValues ) {
   var discount by remember { mutableStateOf("") }
   var discountedPrice by remember { mutableStateOf(0.0) }
   var discountAmount by remember { mutableStateOf(0.0) }
+  var showAlert by remember { mutableStateOf(false) }
 
    Column(
      modifier = Modifier
@@ -108,7 +109,7 @@ fun ContentHomeView(paddingValues: PaddingValues ) {
          MainTextField(
            value = price,
            onValueChange = { price = it },
-           label = "100"
+           label = "Precio"
          )
          SpaceHeight(10.dp)
          SubTitle(
@@ -117,17 +118,32 @@ fun ContentHomeView(paddingValues: PaddingValues ) {
          MainTextField(
            value = discount,
            onValueChange = { discount = it },
-           label = "Precio",
+           label = "Descuento",
            icon = Icons.Default.Percent
          )
          SpaceHeight(20.dp)
          MainBtn(
-           text = "Descuento",
+           text = "Calcular",
            onClick = {
-              discountAmount = calculateSave(price.toDouble(), discount.toDouble())
-              discountedPrice =calculateDiscount(price.toDouble(), discount.toDouble())
+             if( price.isEmpty() || discount.isEmpty()){
+               showAlert = true
+               return@MainBtn
+             }
+
+             discountAmount = calculateSave(price.toDouble(), discount.toDouble())
+             discountedPrice =calculateDiscount(price.toDouble(), discount.toDouble())
            }
          )
+
+         if(showAlert) {
+           Alert(
+             title = "Error",
+             message = "Por favor, complete todos los campos.",
+             confirmText = "Aceptar",
+             onDismiss = { showAlert = false },
+             onConfirm = { showAlert = false }
+           )
+         }
        }
      }
      Column(
