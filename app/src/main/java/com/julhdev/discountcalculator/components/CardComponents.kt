@@ -3,6 +3,7 @@ package com.julhdev.discountcalculator.components
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -38,8 +39,8 @@ fun MainCard(
     Column(
       verticalArrangement = Arrangement.Center,
       modifier = Modifier
-        .fillMaxSize()
-        .padding(horizontal = 30.dp),
+        .fillMaxWidth()
+        .padding( 30.dp),
     ) {
       Text(
         text = "Precio con descuento",

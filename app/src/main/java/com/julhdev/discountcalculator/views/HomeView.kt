@@ -8,10 +8,10 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Percent
-import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -70,13 +70,16 @@ fun ContentHomeView(paddingValues: PaddingValues ) {
   var discountedPrice by remember { mutableStateOf(0.0) }
   var discountAmount by remember { mutableStateOf(0.0) }
   var showAlert by remember { mutableStateOf(false) }
+  val verticalState = rememberScrollState()
 
    Column(
      modifier = Modifier
-        .fillMaxSize()
-        .background(MaterialTheme.colorScheme.background),
+        .fillMaxWidth()
+        .background(MaterialTheme.colorScheme.background)
+       .verticalScroll(verticalState),
       verticalArrangement = Arrangement.Top,
       horizontalAlignment = Alignment.CenterHorizontally,
+
    ) {
      Column(
        modifier = Modifier
