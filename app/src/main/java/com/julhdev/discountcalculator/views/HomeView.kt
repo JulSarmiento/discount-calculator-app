@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Percent
@@ -37,10 +38,12 @@ import com.julhdev.discountcalculator.components.SpaceHeight
 import com.julhdev.discountcalculator.components.SubTitle
 import com.julhdev.discountcalculator.components.TitleVew
 import com.julhdev.discountcalculator.utils.*
+import com.julhdev.discountcalculator.viewModels.CalculateViewModel1
+import androidx.compose.ui.platform.LocalFocusManager
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeView() {
+fun HomeView(viewModel: CalculateViewModel1) {
   Scaffold(
     topBar = {
       TopAppBar(
@@ -59,23 +62,25 @@ fun HomeView() {
       )
     }
   ) {
-    ContentHomeView(it)
+    ContentHomeView(it, viewModel)
   }
 }
 
 @Composable
-fun ContentHomeView(paddingValues: PaddingValues ) {
+fun ContentHomeView(paddingValues: PaddingValues, viewModel: CalculateViewModel1 ) {
   var price by remember { mutableStateOf("") }
   var discount by remember { mutableStateOf("") }
   var discountedPrice by remember { mutableStateOf(0.0) }
   var discountAmount by remember { mutableStateOf(0.0) }
   var showAlert by remember { mutableStateOf(false) }
   val verticalState = rememberScrollState()
+  val focusManager = LocalFocusManager.current
 
    Column(
      modifier = Modifier
-        .fillMaxWidth()
-        .background(MaterialTheme.colorScheme.background)
+       .fillMaxSize()
+       .wrapContentHeight()
+       .background(MaterialTheme.colorScheme.background)
        .verticalScroll(verticalState),
       verticalArrangement = Arrangement.Top,
       horizontalAlignment = Alignment.CenterHorizontally,
@@ -129,20 +134,29 @@ fun ContentHomeView(paddingValues: PaddingValues ) {
          MainBtn(
            text = "Calcular",
            onClick = {
-             if( price.isEmpty() || discount.isEmpty()){
+             focusManager.clearFocus()
+             if (price.isBlank() || discount.isBlank()) {
                showAlert = true
-               return@MainBtn
-             }
+             } else {
+               try {
+                 val result = viewModel.calculate(price, discount)
+                 showAlert = result.second.second
 
-             discountAmount = calculateSave(price.toDouble(), discount.toDouble())
-             discountedPrice =calculateDiscount(price.toDouble(), discount.toDouble())
+                 if (!showAlert) {
+                   discountedPrice = result.first
+                   discountAmount = result.second.first
+                 }
+               } catch (e: Exception) {
+                 showAlert = true
+               }
+             }
            }
          )
 
-         if(showAlert) {
+         if (showAlert) {
            Alert(
              title = "Error",
-             message = "Por favor, complete todos los campos.",
+             message = "Por favor ingresa un monto y un descuento válido.",
              confirmText = "Aceptar",
              onDismiss = { showAlert = false },
              onConfirm = { showAlert = false }
@@ -153,7 +167,7 @@ fun ContentHomeView(paddingValues: PaddingValues ) {
      Column(
        modifier = Modifier
          .background(MaterialTheme.colorScheme.tertiary)
-         .fillMaxWidth()
+         .fillMaxSize()
          .padding( 15.dp),
      ) {
        TitleVew(
@@ -175,6 +189,7 @@ fun ContentHomeView(paddingValues: PaddingValues ) {
              .padding(5.dp)
          )
        }
+       SpaceHeight(20.dp)
      }
    }
 }

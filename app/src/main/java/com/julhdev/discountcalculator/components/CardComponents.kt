@@ -39,7 +39,7 @@ fun MainCard(
     Column(
       verticalArrangement = Arrangement.Center,
       modifier = Modifier
-        .fillMaxWidth()
+        .fillMaxSize()
         .padding( 30.dp),
     ) {
       Text(
