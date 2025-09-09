@@ -106,7 +106,7 @@ class CalculateViewModel1: ViewModel() {
    * Cancela la alerta estableciendo showAlert a false.
    * @usage cancelAlter()
    */
-  fun cancelAlter(){
+  fun cancelAlert(){
     state = state.copy(
       showAlert = false
     )

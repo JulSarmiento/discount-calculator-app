@@ -125,8 +125,8 @@ fun ContentHomeView(paddingValues: PaddingValues, viewModel: CalculateViewModel1
               title = "Error",
               message = "Por favor ingresa un monto y un descuento válido.",
               confirmText = "Aceptar",
-              onDismiss = { viewModel.cancelAlter() },
-              onConfirm = { viewModel.cancelAlter() }
+              onDismiss = { viewModel.cancelAlert() },
+              onConfirm = { viewModel.cancelAlert() }
             )
         }
         }
