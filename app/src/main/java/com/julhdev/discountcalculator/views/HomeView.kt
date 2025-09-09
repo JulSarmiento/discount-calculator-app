@@ -37,7 +37,6 @@ import com.julhdev.discountcalculator.components.OutlineBtn
 import com.julhdev.discountcalculator.components.SpaceHeight
 import com.julhdev.discountcalculator.components.SubTitle
 import com.julhdev.discountcalculator.components.TitleVew
-import com.julhdev.discountcalculator.utils.*
 import com.julhdev.discountcalculator.viewModels.CalculateViewModel1
 import androidx.compose.ui.platform.LocalFocusManager
 
@@ -68,11 +67,6 @@ fun HomeView(viewModel: CalculateViewModel1) {
 
 @Composable
 fun ContentHomeView(paddingValues: PaddingValues, viewModel: CalculateViewModel1 ) {
-  var price by remember { mutableStateOf("") }
-  var discount by remember { mutableStateOf("") }
-  var discountedPrice by remember { mutableStateOf(0.0) }
-  var discountAmount by remember { mutableStateOf(0.0) }
-  var showAlert by remember { mutableStateOf(false) }
   val verticalState = rememberScrollState()
   val focusManager = LocalFocusManager.current
 
@@ -103,10 +97,7 @@ fun ContentHomeView(paddingValues: PaddingValues, viewModel: CalculateViewModel1
          OutlineBtn(
            text = "Limpiar",
            onClick = {
-              price = ""
-              discount = ""
-              discountedPrice = 0.0
-              discountAmount = 0.0
+              viewModel.reset()
            }
          )
        }
@@ -116,8 +107,8 @@ fun ContentHomeView(paddingValues: PaddingValues, viewModel: CalculateViewModel1
            text = "Monto inicial"
          )
          MainTextField(
-           value = price,
-           onValueChange = { price = it },
+           value = viewModel.price,
+           onValueChange = { viewModel.onValue(it, "price") },
            label = "Precio"
          )
          SpaceHeight(10.dp)
@@ -125,8 +116,8 @@ fun ContentHomeView(paddingValues: PaddingValues, viewModel: CalculateViewModel1
            text = "Porcentaje de descuento"
          )
          MainTextField(
-           value = discount,
-           onValueChange = { discount = it },
+           value = viewModel.discount,
+           onValueChange = { viewModel.onValue(it, "discount") },
            label = "Descuento",
            icon = Icons.Default.Percent
          )
@@ -135,31 +126,17 @@ fun ContentHomeView(paddingValues: PaddingValues, viewModel: CalculateViewModel1
            text = "Calcular",
            onClick = {
              focusManager.clearFocus()
-             if (price.isBlank() || discount.isBlank()) {
-               showAlert = true
-             } else {
-               try {
-                 val result = viewModel.calculate(price, discount)
-                 showAlert = result.second.second
-
-                 if (!showAlert) {
-                   discountedPrice = result.first
-                   discountAmount = result.second.first
-                 }
-               } catch (e: Exception) {
-                 showAlert = true
-               }
-             }
+             viewModel.calculate(viewModel.price, viewModel.discount)
            }
          )
 
-         if (showAlert) {
+         if (viewModel.showAlert) {
            Alert(
              title = "Error",
              message = "Por favor ingresa un monto y un descuento válido.",
              confirmText = "Aceptar",
-             onDismiss = { showAlert = false },
-             onConfirm = { showAlert = false }
+             onDismiss = { viewModel.cancelAlter() },
+             onConfirm = { viewModel.cancelAlter() }
            )
          }
        }
@@ -182,8 +159,8 @@ fun ContentHomeView(paddingValues: PaddingValues, viewModel: CalculateViewModel1
        Box(
        ){
          MainCard(
-           discountedPrice = discountedPrice,
-           discountedAmmout = discountAmount,
+           discountedPrice = viewModel.discountedPrice,
+           discountedAmmout = viewModel.discountAmount,
            modifier = Modifier
              .fillMaxSize()
              .padding(5.dp)
