@@ -35,6 +35,7 @@ import com.julhdev.discountcalculator.components.SubTitle
 import com.julhdev.discountcalculator.components.TitleVew
 import com.julhdev.discountcalculator.viewModels.CalculateViewModel1
 import androidx.compose.ui.platform.LocalFocusManager
+import com.julhdev.discountcalculator.utils.sanitizePercent
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -114,7 +115,10 @@ fun ContentHomeView(paddingValues: PaddingValues, viewModel: CalculateViewModel1
          )
          MainTextField(
            value = state.discount,
-           onValueChange = { viewModel.onValue(it, "discount") },
+           onValueChange = {  input ->
+             val sanitized = sanitizePercent(input)
+             viewModel.onValue(sanitized, "discount")
+           },
            label = "Descuento",
            icon = Icons.Default.Percent
          )
