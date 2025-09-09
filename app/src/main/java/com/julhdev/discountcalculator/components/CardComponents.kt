@@ -35,7 +35,7 @@ fun MainCard(
     shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
     colors = CardDefaults.cardColors(
       containerColor = MaterialTheme.colorScheme.primary,
-      contentColor = MaterialTheme.colorScheme.background,
+      contentColor = MaterialTheme.colorScheme.onPrimary,
     ),
   ) {
     Column(
@@ -57,7 +57,7 @@ fun MainCard(
       SpaceHeight(10.dp)
       HorizontalDivider(
         thickness = 1.dp,
-        color = MaterialTheme.colorScheme.background
+        color = MaterialTheme.colorScheme.onPrimary
       )
       SpaceHeight(20.dp)
       Text(

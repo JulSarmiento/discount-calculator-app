@@ -73,57 +73,62 @@ fun ContentHomeView(paddingValues: PaddingValues, viewModel: CalculateViewModel1
       .fillMaxSize()
       .background(MaterialTheme.colorScheme.background)
       .padding(paddingValues),
-    verticalArrangement = Arrangement.Top,
+    verticalArrangement = Arrangement.spacedBy(12.dp),
     horizontalAlignment = Alignment.CenterHorizontally,
   ) {
     item {
       Column(
         modifier = Modifier
           .fillMaxWidth()
-          .padding(20.dp)
+          .background(MaterialTheme.colorScheme.onPrimary),
       ) {
-        SpaceHeight(10.dp)
-        TitleVew(name = "Calculadora de Descuentos")
-        SpaceHeight(10.dp)
-        OutlineBtn(
-          text = "Limpiar",
-          onClick = { viewModel.reset() }
-        )
-        SpaceHeight(25.dp)
-        SubTitle(text = "Monto inicial")
-        MainTextField(
-          value = state.price,
-          onValueChange = { viewModel.onValue(it, "price") },
-          label = "Precio"
-        )
-        SpaceHeight(10.dp)
-        SubTitle(text = "Porcentaje de descuento")
-        MainTextField(
-          value = state.discount,
-          onValueChange = { input ->
-            val sanitized = sanitizePercent(input)
-            viewModel.onValue(sanitized, "discount")
-          },
-          label = "Descuento",
-          icon = Icons.Default.Percent
-        )
-        SpaceHeight(20.dp)
-        MainBtn(
-          text = "Calcular",
-          onClick = {
-            focusManager.clearFocus()
-            viewModel.calculate()
-          }
-        )
-
-        if (state.showAlert) {
-          Alert(
-            title = "Error",
-            message = "Por favor ingresa un monto y un descuento válido.",
-            confirmText = "Aceptar",
-            onDismiss = { viewModel.cancelAlter() },
-            onConfirm = { viewModel.cancelAlter() }
+        Column(
+          modifier = Modifier
+            .padding(20.dp)
+        ) {
+          SpaceHeight(10.dp)
+          TitleVew(name = "Calculadora de Descuentos")
+          SpaceHeight(10.dp)
+          OutlineBtn(
+            text = "Limpiar",
+            onClick = { viewModel.reset() }
           )
+          SpaceHeight(25.dp)
+          SubTitle(text = "Monto inicial")
+          MainTextField(
+            value = state.price,
+            onValueChange = { viewModel.onValue(it, "price") },
+            label = "Precio"
+          )
+          SpaceHeight(10.dp)
+          SubTitle(text = "Porcentaje de descuento")
+          MainTextField(
+            value = state.discount,
+            onValueChange = { input ->
+              val sanitized = sanitizePercent(input)
+              viewModel.onValue(sanitized, "discount")
+            },
+            label = "Descuento",
+            icon = Icons.Default.Percent
+          )
+          SpaceHeight(20.dp)
+          MainBtn(
+            text = "Calcular",
+            onClick = {
+              focusManager.clearFocus()
+              viewModel.calculate()
+            }
+          )
+
+          if (state.showAlert) {
+            Alert(
+              title = "Error",
+              message = "Por favor ingresa un monto y un descuento válido.",
+              confirmText = "Aceptar",
+              onDismiss = { viewModel.cancelAlter() },
+              onConfirm = { viewModel.cancelAlter() }
+            )
+        }
         }
       }
     }
@@ -137,12 +142,12 @@ fun ContentHomeView(paddingValues: PaddingValues, viewModel: CalculateViewModel1
       ) {
         TitleVew(
           name = "Resultado",
-          color = MaterialTheme.colorScheme.background
+          color = MaterialTheme.colorScheme.onPrimary
         )
         SpaceHeight(5.dp)
         Text(
           text = "Tus resultados se muestran a continuación según la información que ingresaste.",
-          color = MaterialTheme.colorScheme.background
+          color = MaterialTheme.colorScheme.onPrimary
         )
         SpaceHeight(20.dp)
         Box {
