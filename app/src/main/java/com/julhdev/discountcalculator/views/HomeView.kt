@@ -70,7 +70,7 @@ fun ContentHomeView(paddingValues: PaddingValues, viewModel: CalculateViewModel1
 
   LazyColumn(
     modifier = Modifier
-      .fillMaxWidth()
+      .fillMaxSize()
       .background(MaterialTheme.colorScheme.background)
       .padding(paddingValues),
     verticalArrangement = Arrangement.Top,

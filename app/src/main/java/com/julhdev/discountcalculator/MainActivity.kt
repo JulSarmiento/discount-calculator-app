@@ -14,7 +14,6 @@ import kotlin.getValue
 class MainActivity : ComponentActivity() {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
-    enableEdgeToEdge()
     val viewModel : CalculateViewModel1 by viewModels()
     setContent {
       DiscountCalculatorTheme {
