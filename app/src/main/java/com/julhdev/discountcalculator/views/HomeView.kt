@@ -21,10 +21,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -69,6 +65,7 @@ fun HomeView(viewModel: CalculateViewModel1) {
 fun ContentHomeView(paddingValues: PaddingValues, viewModel: CalculateViewModel1 ) {
   val verticalState = rememberScrollState()
   val focusManager = LocalFocusManager.current
+  val state = viewModel.state
 
    Column(
      modifier = Modifier
@@ -107,7 +104,7 @@ fun ContentHomeView(paddingValues: PaddingValues, viewModel: CalculateViewModel1
            text = "Monto inicial"
          )
          MainTextField(
-           value = viewModel.price,
+           value = state.price,
            onValueChange = { viewModel.onValue(it, "price") },
            label = "Precio"
          )
@@ -116,7 +113,7 @@ fun ContentHomeView(paddingValues: PaddingValues, viewModel: CalculateViewModel1
            text = "Porcentaje de descuento"
          )
          MainTextField(
-           value = viewModel.discount,
+           value = state.discount,
            onValueChange = { viewModel.onValue(it, "discount") },
            label = "Descuento",
            icon = Icons.Default.Percent
@@ -126,11 +123,11 @@ fun ContentHomeView(paddingValues: PaddingValues, viewModel: CalculateViewModel1
            text = "Calcular",
            onClick = {
              focusManager.clearFocus()
-             viewModel.calculate(viewModel.price, viewModel.discount)
+             viewModel.calculate()
            }
          )
 
-         if (viewModel.showAlert) {
+         if (state.showAlert) {
            Alert(
              title = "Error",
              message = "Por favor ingresa un monto y un descuento válido.",
@@ -159,8 +156,8 @@ fun ContentHomeView(paddingValues: PaddingValues, viewModel: CalculateViewModel1
        Box(
        ){
          MainCard(
-           discountedPrice = viewModel.discountedPrice,
-           discountedAmmout = viewModel.discountAmount,
+           discountedPrice = state.discountedPrice,
+           discountedAmmout = state.discountAmount,
            modifier = Modifier
              .fillMaxSize()
              .padding(5.dp)
