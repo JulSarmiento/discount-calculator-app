@@ -5,14 +5,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Percent
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -41,6 +41,7 @@ import com.julhdev.discountcalculator.utils.sanitizePercent
 @Composable
 fun HomeView(viewModel: CalculateViewModel1) {
   Scaffold(
+    modifier = Modifier,
     topBar = {
       TopAppBar(
         title = { Text(text = "Descuentos-chan", fontWeight = FontWeight.Bold) },
@@ -64,110 +65,98 @@ fun HomeView(viewModel: CalculateViewModel1) {
 
 @Composable
 fun ContentHomeView(paddingValues: PaddingValues, viewModel: CalculateViewModel1 ) {
-  val verticalState = rememberScrollState()
   val focusManager = LocalFocusManager.current
   val state = viewModel.state
 
-   Column(
-     modifier = Modifier
-       .fillMaxSize()
-       .wrapContentHeight()
-       .background(MaterialTheme.colorScheme.background)
-       .verticalScroll(verticalState),
-      verticalArrangement = Arrangement.Top,
-      horizontalAlignment = Alignment.CenterHorizontally,
+  LazyColumn(
+    modifier = Modifier
+      .fillMaxWidth()
+      .background(MaterialTheme.colorScheme.background)
+      .padding(paddingValues),
+    verticalArrangement = Arrangement.Top,
+    horizontalAlignment = Alignment.CenterHorizontally,
+  ) {
+    item {
+      Column(
+        modifier = Modifier
+          .fillMaxWidth()
+          .padding(20.dp)
+      ) {
+        SpaceHeight(10.dp)
+        TitleVew(name = "Calculadora de Descuentos")
+        SpaceHeight(10.dp)
+        OutlineBtn(
+          text = "Limpiar",
+          onClick = { viewModel.reset() }
+        )
+        SpaceHeight(25.dp)
+        SubTitle(text = "Monto inicial")
+        MainTextField(
+          value = state.price,
+          onValueChange = { viewModel.onValue(it, "price") },
+          label = "Precio"
+        )
+        SpaceHeight(10.dp)
+        SubTitle(text = "Porcentaje de descuento")
+        MainTextField(
+          value = state.discount,
+          onValueChange = { input ->
+            val sanitized = sanitizePercent(input)
+            viewModel.onValue(sanitized, "discount")
+          },
+          label = "Descuento",
+          icon = Icons.Default.Percent
+        )
+        SpaceHeight(20.dp)
+        MainBtn(
+          text = "Calcular",
+          onClick = {
+            focusManager.clearFocus()
+            viewModel.calculate()
+          }
+        )
 
-   ) {
-     Column(
-       modifier = Modifier
-         .fillMaxWidth()
-         .padding(paddingValues)
-         .padding(vertical = 10.dp)
-         .padding(horizontal = 20.dp),
-
-       ) {
-       SpaceHeight(20.dp)
-       Column {
-         TitleVew(
-           name = "Calculadora de Descuentos"
-         )
-         SpaceHeight(10.dp)
-         OutlineBtn(
-           text = "Limpiar",
-           onClick = {
-              viewModel.reset()
-           }
-         )
-       }
-       SpaceHeight(25.dp)
-       Column {
-         SubTitle(
-           text = "Monto inicial"
-         )
-         MainTextField(
-           value = state.price,
-           onValueChange = { viewModel.onValue(it, "price") },
-           label = "Precio"
-         )
-         SpaceHeight(10.dp)
-         SubTitle(
-           text = "Porcentaje de descuento"
-         )
-         MainTextField(
-           value = state.discount,
-           onValueChange = {  input ->
-             val sanitized = sanitizePercent(input)
-             viewModel.onValue(sanitized, "discount")
-           },
-           label = "Descuento",
-           icon = Icons.Default.Percent
-         )
-         SpaceHeight(20.dp)
-         MainBtn(
-           text = "Calcular",
-           onClick = {
-             focusManager.clearFocus()
-             viewModel.calculate()
-           }
-         )
-
-         if (state.showAlert) {
-           Alert(
-             title = "Error",
-             message = "Por favor ingresa un monto y un descuento válido.",
-             confirmText = "Aceptar",
-             onDismiss = { viewModel.cancelAlter() },
-             onConfirm = { viewModel.cancelAlter() }
-           )
-         }
-       }
-     }
-     Column(
-       modifier = Modifier
-         .background(MaterialTheme.colorScheme.tertiary)
-         .fillMaxSize()
-         .padding( 15.dp),
-     ) {
-       TitleVew(
+        if (state.showAlert) {
+          Alert(
+            title = "Error",
+            message = "Por favor ingresa un monto y un descuento válido.",
+            confirmText = "Aceptar",
+            onDismiss = { viewModel.cancelAlter() },
+            onConfirm = { viewModel.cancelAlter() }
+          )
+        }
+      }
+    }
+    item {
+      Column(
+        modifier = Modifier
+          .background(MaterialTheme.colorScheme.tertiary)
+          .fillMaxWidth()
+          .padding(vertical = 25.dp)
+          .padding(horizontal = 15.dp)
+      ) {
+        TitleVew(
           name = "Resultado",
-         color = MaterialTheme.colorScheme.background
-       )
-       SpaceHeight(5.dp)
-       Text(
-          text = "Tus resultados se muestran a continuación según la información que ingresaste."
-       )
-       SpaceHeight(10.dp)
-       Box(
-       ){
-         MainCard(
-           discountedPrice = state.discountedPrice,
-           discountedAmmout = state.discountAmount,
-           modifier = Modifier
-             .fillMaxSize()
-             .padding(5.dp)
-         )
-       }
-       SpaceHeight(20.dp)
-     }
-   }
+          color = MaterialTheme.colorScheme.background
+        )
+        SpaceHeight(5.dp)
+        Text(
+          text = "Tus resultados se muestran a continuación según la información que ingresaste.",
+          color = MaterialTheme.colorScheme.background
+        )
+        SpaceHeight(20.dp)
+        Box {
+          MainCard(
+            discountedPrice = state.discountedPrice,
+            discountedAmmout = state.discountAmount,
+            modifier = Modifier
+              .fillMaxWidth()
+              .wrapContentHeight()
+              .padding(5.dp)
+          )
+        }
+      }
+    }
+  }
+  SpaceHeight(40.dp)
 }

@@ -17,6 +17,7 @@ private val DarkColorScheme = darkColorScheme(
   secondary = Secondary,
   tertiary = Secondary70,
   background = Background,
+  surface = Background,
   error = Error
 )
 
@@ -26,6 +27,7 @@ private val LightColorScheme = lightColorScheme(
   secondary = Secondary,
   tertiary = Secondary70,
   background = Background,
+  surface = Background,
   error = Error
 )
 
