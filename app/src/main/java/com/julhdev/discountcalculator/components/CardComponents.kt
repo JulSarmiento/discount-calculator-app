@@ -3,6 +3,7 @@ package com.julhdev.discountcalculator.components
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
@@ -14,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.julhdev.discountcalculator.utils.formatValue
 
 @Composable
         /**
@@ -27,26 +29,27 @@ fun MainCard(
   discountedAmmout: Double,
   modifier: Modifier = Modifier
 ){
+
   Card(
     modifier = modifier,
     shape = RoundedCornerShape(topStart = 16.dp, topEnd = 16.dp),
     colors = CardDefaults.cardColors(
       containerColor = MaterialTheme.colorScheme.primary,
-      contentColor = MaterialTheme.colorScheme.background,
+      contentColor = MaterialTheme.colorScheme.onPrimary,
     ),
   ) {
     Column(
       verticalArrangement = Arrangement.Center,
       modifier = Modifier
-        .fillMaxSize()
-        .padding(horizontal = 30.dp),
+        .fillMaxWidth()
+        .padding(30.dp),
     ) {
       Text(
         text = "Precio con descuento",
       )
       SpaceHeight(10.dp)
       Text(
-        text = "$ $discountedPrice",
+        text = "$ ${formatValue.format(discountedPrice)}",
         style = MaterialTheme.typography.headlineMedium,
         color = MaterialTheme.colorScheme.secondary,
         fontSize = 35.sp,
@@ -54,7 +57,7 @@ fun MainCard(
       SpaceHeight(10.dp)
       HorizontalDivider(
         thickness = 1.dp,
-        color = MaterialTheme.colorScheme.background
+        color = MaterialTheme.colorScheme.onPrimary
       )
       SpaceHeight(20.dp)
       Text(
@@ -62,7 +65,7 @@ fun MainCard(
       )
       SpaceHeight(10.dp)
       Text(
-        text = "$ $discountedAmmout",
+        text = "$ ${formatValue.format(discountedAmmout)}",
         style = MaterialTheme.typography.headlineMedium
       )
     }

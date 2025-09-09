@@ -5,13 +5,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Percent
-import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -20,10 +21,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
@@ -36,12 +33,15 @@ import com.julhdev.discountcalculator.components.OutlineBtn
 import com.julhdev.discountcalculator.components.SpaceHeight
 import com.julhdev.discountcalculator.components.SubTitle
 import com.julhdev.discountcalculator.components.TitleVew
-import com.julhdev.discountcalculator.utils.*
+import com.julhdev.discountcalculator.viewModels.CalculateViewModel1
+import androidx.compose.ui.platform.LocalFocusManager
+import com.julhdev.discountcalculator.utils.sanitizePercent
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun HomeView() {
+fun HomeView(viewModel: CalculateViewModel1) {
   Scaffold(
+    modifier = Modifier,
     topBar = {
       TopAppBar(
         title = { Text(text = "Descuentos-chan", fontWeight = FontWeight.Bold) },
@@ -59,119 +59,109 @@ fun HomeView() {
       )
     }
   ) {
-    ContentHomeView(it)
+    ContentHomeView(it, viewModel)
   }
 }
 
 @Composable
-fun ContentHomeView(paddingValues: PaddingValues ) {
-  var price by remember { mutableStateOf("") }
-  var discount by remember { mutableStateOf("") }
-  var discountedPrice by remember { mutableStateOf(0.0) }
-  var discountAmount by remember { mutableStateOf(0.0) }
-  var showAlert by remember { mutableStateOf(false) }
+fun ContentHomeView(paddingValues: PaddingValues, viewModel: CalculateViewModel1 ) {
+  val focusManager = LocalFocusManager.current
+  val state = viewModel.state
 
-   Column(
-     modifier = Modifier
-        .fillMaxSize()
-        .background(MaterialTheme.colorScheme.background),
-      verticalArrangement = Arrangement.Top,
-      horizontalAlignment = Alignment.CenterHorizontally,
-   ) {
-     Column(
-       modifier = Modifier
-         .fillMaxWidth()
-         .padding(paddingValues)
-         .padding(vertical = 10.dp)
-         .padding(horizontal = 20.dp),
+  LazyColumn(
+    modifier = Modifier
+      .fillMaxSize()
+      .background(MaterialTheme.colorScheme.background)
+      .padding(paddingValues),
+    verticalArrangement = Arrangement.spacedBy(12.dp),
+    horizontalAlignment = Alignment.CenterHorizontally,
+  ) {
+    item {
+      Column(
+        modifier = Modifier
+          .fillMaxWidth()
+          .background(MaterialTheme.colorScheme.onPrimary),
+      ) {
+        Column(
+          modifier = Modifier
+            .padding(20.dp)
+        ) {
+          SpaceHeight(10.dp)
+          TitleVew(name = "Calculadora de Descuentos")
+          SpaceHeight(10.dp)
+          OutlineBtn(
+            text = "Limpiar",
+            onClick = { viewModel.reset() }
+          )
+          SpaceHeight(25.dp)
+          SubTitle(text = "Monto inicial")
+          MainTextField(
+            value = state.price,
+            onValueChange = { viewModel.onValue(it, "price") },
+            label = "Precio"
+          )
+          SpaceHeight(10.dp)
+          SubTitle(text = "Porcentaje de descuento")
+          MainTextField(
+            value = state.discount,
+            onValueChange = { input ->
+              val sanitized = sanitizePercent(input)
+              viewModel.onValue(sanitized, "discount")
+            },
+            label = "Descuento",
+            icon = Icons.Default.Percent
+          )
+          SpaceHeight(20.dp)
+          MainBtn(
+            text = "Calcular",
+            onClick = {
+              focusManager.clearFocus()
+              viewModel.calculate()
+            }
+          )
 
-       ) {
-       SpaceHeight(20.dp)
-       Column {
-         TitleVew(
-           name = "Calculadora de Descuentos"
-         )
-         SpaceHeight(10.dp)
-         OutlineBtn(
-           text = "Limpiar",
-           onClick = {
-              price = ""
-              discount = ""
-              discountedPrice = 0.0
-              discountAmount = 0.0
-           }
-         )
-       }
-       SpaceHeight(25.dp)
-       Column {
-         SubTitle(
-           text = "Monto inicial"
-         )
-         MainTextField(
-           value = price,
-           onValueChange = { price = it },
-           label = "Precio"
-         )
-         SpaceHeight(10.dp)
-         SubTitle(
-           text = "Porcentaje de descuento"
-         )
-         MainTextField(
-           value = discount,
-           onValueChange = { discount = it },
-           label = "Descuento",
-           icon = Icons.Default.Percent
-         )
-         SpaceHeight(20.dp)
-         MainBtn(
-           text = "Calcular",
-           onClick = {
-             if( price.isEmpty() || discount.isEmpty()){
-               showAlert = true
-               return@MainBtn
-             }
-
-             discountAmount = calculateSave(price.toDouble(), discount.toDouble())
-             discountedPrice =calculateDiscount(price.toDouble(), discount.toDouble())
-           }
-         )
-
-         if(showAlert) {
-           Alert(
-             title = "Error",
-             message = "Por favor, complete todos los campos.",
-             confirmText = "Aceptar",
-             onDismiss = { showAlert = false },
-             onConfirm = { showAlert = false }
-           )
-         }
-       }
-     }
-     Column(
-       modifier = Modifier
-         .background(MaterialTheme.colorScheme.tertiary)
-         .fillMaxWidth()
-         .padding( 15.dp),
-     ) {
-       TitleVew(
+          if (state.showAlert) {
+            Alert(
+              title = "Error",
+              message = "Por favor ingresa un monto y un descuento válido.",
+              confirmText = "Aceptar",
+              onDismiss = { viewModel.cancelAlert() },
+              onConfirm = { viewModel.cancelAlert() }
+            )
+        }
+        }
+      }
+    }
+    item {
+      Column(
+        modifier = Modifier
+          .background(MaterialTheme.colorScheme.tertiary)
+          .fillMaxWidth()
+          .padding(vertical = 25.dp)
+          .padding(horizontal = 15.dp)
+      ) {
+        TitleVew(
           name = "Resultado",
-         color = MaterialTheme.colorScheme.background
-       )
-       SpaceHeight(5.dp)
-       Text(
-          text = "Tus resultados se muestran a continuación según la información que ingresaste."
-       )
-       SpaceHeight(10.dp)
-       Box(
-       ){
-         MainCard(
-           discountedPrice = discountedPrice,
-           discountedAmmout = discountAmount,
-           modifier = Modifier
-             .fillMaxSize()
-             .padding(5.dp)
-         )
-       }
-     }
-   }
+          color = MaterialTheme.colorScheme.onPrimary
+        )
+        SpaceHeight(5.dp)
+        Text(
+          text = "Tus resultados se muestran a continuación según la información que ingresaste.",
+          color = MaterialTheme.colorScheme.onPrimary
+        )
+        SpaceHeight(20.dp)
+        Box {
+          MainCard(
+            discountedPrice = state.discountedPrice,
+            discountedAmmout = state.discountAmount,
+            modifier = Modifier
+              .fillMaxWidth()
+              .wrapContentHeight()
+              .padding(5.dp)
+          )
+        }
+      }
+    }
+  }
+  SpaceHeight(40.dp)
 }

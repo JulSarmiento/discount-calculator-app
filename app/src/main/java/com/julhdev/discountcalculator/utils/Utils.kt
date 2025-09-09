@@ -1,33 +1,38 @@
 package com.julhdev.discountcalculator.utils
-
-import kotlin.math.round
-
-/**
- * Calcula el precio final después de aplicar un descuento.
- *
- * @param price El precio original.
- * @param discount El porcentaje de descuento a aplicar.
- * @return El precio con descuento redondeado a 2 decimales.
- */
-fun calculateDiscount(
-  price: Double,
-  discount: Double,
-): Double {
-  val finalPrice = price - calculateSave(price, discount)
-  return (round(finalPrice * 100) / 100)
-}
+import android.icu.text.DecimalFormat
+import java.math.BigDecimal
+import java.math.RoundingMode
 
 /**
- * Calcula la cantidad de dinero que se ahorra con un descuento.
- *
- * @param price El precio original.
- * @param discount El porcentaje de descuento a aplicar.
- * @return La cantidad de dinero ahorrada redondeada a 2 decimales.
+ * Formato para valores numéricos con separadores de miles.
+ * Ejemplo: 1234567 -> "1,234,567"
+ * @usage formatValue.format(1234567)
  */
-fun calculateSave(
-  price: Double,
-  discount: Double,
-): Double {
-  val save = price * (discount / 100)
-  return (round(save * 100) / 100)
+val formatValue = DecimalFormat("###,###,###")
+
+/**
+ * Normaliza una entrada de porcentaje, permite números (con decimal opcional),
+ * convierte comas a puntos, parsea seguro, y devuelve un valor clamped entre 0 y 100.
+ * Devuelve cadena vacía si la entrada está vacía.
+ */
+fun sanitizePercent(input: String): String {
+  val trimmed = input.trim()
+  if (trimmed.isEmpty()) return ""
+
+  val cleaned = trimmed.replace("[^0-9,\\.]".toRegex(), "")
+  if (cleaned.isEmpty()) return ""
+
+  val normalized = cleaned.replace(',', '.')
+  val value = normalized.toDoubleOrNull() ?: return ""
+  val clamped = when {
+    value.isNaN() -> 0.0
+    value < 0.0 -> 0.0
+    value > 100.0 -> 100.0
+    else -> value
+  }
+  return try {
+    BigDecimal.valueOf(clamped).setScale(2, RoundingMode.HALF_UP).stripTrailingZeros().toPlainString()
+  } catch (e: Exception) {
+    clamped.toString()
+  }
 }

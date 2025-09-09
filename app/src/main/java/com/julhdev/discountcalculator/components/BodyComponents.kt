@@ -9,7 +9,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AttachMoney
 import androidx.compose.material.icons.filled.Calculate
 import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.BasicAlertDialog
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -28,8 +27,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.*
-
-
 
 @Composable
         /**
@@ -130,12 +127,12 @@ fun MainTextField(
     keyboardOptions = KeyboardOptions(
       keyboardType = KeyboardType.Number
     ),
-
     modifier = Modifier
       .fillMaxWidth()
       .padding(0.dp)
   )
 }
+
 
 @Composable
         /**
